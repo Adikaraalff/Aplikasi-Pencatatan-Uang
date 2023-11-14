@@ -89,6 +89,30 @@ class UangMasukController extends Controller
         }
         return redirect('/uang_masuks');
     }
+    public function edit($id)
+    {
+        $uang_Masuk = Uang_Masuk::find($id);
+        $lokasi_Uang = Lokasi_Uang::all(); // Assuming this retrieves all the Lokasi_Uang records
+        return view('keuangan.uang_masuks.edit', compact('uang_Masuk', 'lokasi_Uang'));
+    }
+    public function update(Request $request, $id)
+    {
+        $uang_Masuk = Uang_Masuk::find($id);
+        $uang_Masuk->created_by = $request->created_by;
+        $uang_Masuk->id_lokasi_uang = $request->lokasi_uang;
+        $uang_Masuk->jumlah = $request->jumlah;
+        $uang_Masuk->keterangan = $request->keterangan;
+        $uang_Masuk->save();
+
+        return redirect('/uang_masuks');
+    }
+    public function destroy($id)
+    {
+        $uang_Masuk = Uang_Masuk::find($id);
+        $uang_Masuk->delete();
+
+        return redirect('/uang_masuks');
+    }
 
     // Metode lain tidak berubah
 }

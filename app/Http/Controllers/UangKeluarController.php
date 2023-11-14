@@ -27,9 +27,9 @@ class UangKeluarController extends Controller
                 ->addColumn('id_lokasi_uang', function (Uang_Keluar $uk) {
                     return $uk->Lokasi_Uang->nama;
                 })
-                ->addColumn('jumlah', function (Uang_Keluar $uk) {
-                    return 'Rp ' . number_format($uk->jumlah, 0, ',', '.');
-                })
+                // ->addColumn('jumlah', function (Uang_Keluar $uk) {
+                //     return 'Rp ' . number_format($uk->jumlah, 0, ',', '.');
+                // })
                 ->addColumn('action', function ($row) {
                     //$btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
                     $btn = '<form action="' . route('uang_keluars.destroy', $row->id) . '"method="POST">
@@ -67,7 +67,7 @@ class UangKeluarController extends Controller
 
             if ($res > 0) {
                 echo 'success';
-                return redirect('/uang_masuks');
+                return redirect('/uang_keluars');
             } else {
                 echo 'failed';
             }
@@ -79,6 +79,31 @@ class UangKeluarController extends Controller
                 'keterangan' => $input['keterangan'],
             ]);
         }
+        return redirect('/uang_keluars');
+    }
+    public function edit($id)
+    {
+        $uang_Keluar = Uang_Keluar::find($id);
+        $lokasi_Uang = Lokasi_Uang::all(); // Assuming this retrieves all the Lokasi_Uang records
+        return view('keuangan.uang_keluars.edit', compact('uang_Keluar', 'lokasi_Uang'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $uang_Keluar = uang_Keluar::find($id);
+        $uang_Keluar->created_by = $request->created_by;
+        $uang_Keluar->id_lokasi_uang = $request->lokasi_uang;
+        $uang_Keluar->jumlah = $request->jumlah;
+        $uang_Keluar->keterangan = $request->keterangan;
+        $uang_Keluar->save();
+
+        return redirect('/uang_keluars');
+    }
+    public function destroy($id)
+    {
+        $uang_Keluar = Uang_Keluar::find($id);
+        $uang_Keluar->delete();
+
         return redirect('/uang_keluars');
     }
 
