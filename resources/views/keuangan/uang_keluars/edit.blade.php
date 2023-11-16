@@ -25,12 +25,6 @@
                                         value="{{ Auth::user()->name }}" required>
                                 </div>
 
-                                {{-- <div class="form-group">
-                                    <label for="lokasi_Uang">Lokasi Uang:</label>
-                                    <input type="text" class="form-control" id="lokasi_Uang" name="lokasi_uang"
-                                        value="{{ $lokasi_Uang->nama }}" required>
-                                </div> --}}
-
                                 <div class="form-group">
                                     <label for="lokasi_Uang">Lokasi Uang:</label>
                                     <select class="form-control" id="lokasi_Uang" name="lokasi_uang" required>
@@ -52,6 +46,13 @@
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan:</label>
                                     <textarea class="form-control" id="keterangan" name="keterangan" rows="4">{{ $uang_Keluar->keterangan }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="file">Gambar:</label>
+                                    <input type="file" class="form-control" id="file" name="file">
+                                    <img src="/image/{{ $uang_Keluar->file }}"
+                                        alt="Current Image" width="100">
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

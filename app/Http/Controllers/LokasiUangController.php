@@ -23,11 +23,7 @@ class LokasiUangController extends Controller
             $data = $query_data->orderBy('nama', 'asc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('keterangan', function (Lokasi_Uang $lk) {
-                //     return 'Rp ' . number_format($lk->keterangan, 0, ',', '.');
-                // })
                 ->addColumn('action', function ($row) {
-                    //$btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
                     $btn = '<form action="' . route('lokasi_uangs.destroy', $row->id) . '"method="POST">
                     <a class="btn btn-primary mr-2" href="' . route('lokasi_uangs.edit', $row->id) . '">Edit</a>' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger">Delete</button>
                     </form>';

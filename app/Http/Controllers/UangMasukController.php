@@ -28,10 +28,9 @@ class UangMasukController extends Controller
                     return $um->Lokasi_Uang->nama;
                 })
                 ->addColumn('jumlah', function (Uang_Masuk $um) {
-                    return 'Rp ' . number_format($um->jumlah, 0, ',', '.');
+                    return 'Rp' . number_format($um->jumlah, 0, ',', '.');
                 })
                 ->addColumn('action', function ($row) {
-                    //$btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
                     $btn = '<form action="' . route('uang_masuks.destroy', $row->id) . '"method="POST">
                     <a class="btn btn-primary mr-2" href="' . route('uang_masuks.edit', $row->id) . '">Edit</a>' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger">Delete</button>
                     </form>';
@@ -51,58 +50,75 @@ class UangMasukController extends Controller
 
     public function create()
     {
-        $lokasi_Uang = Lokasi_Uang::all(); // Mengambil data lokasi uang
+        $lokasi_Uang = Lokasi_Uang::all();
         return view('keuangan.uang_masuks.create', compact('lokasi_Uang'));
     }
 
     public function store(Request $request)
     {
-        // $uang_Masuk = new Uang_Masuk;
-        // $uang_Masuk->created_by = $request->created_by;
-        // $uang_Masuk->id_lokasi_uang = $request->lokasi_Uang;
-        // $uang_Masuk->jumlah = $request->jumlah;
-        // $uang_Masuk->keterangan = $request->keterangan;
-        // $uang_Masuk->save();
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'created_by' => 'required',
+            'lokasi_Uang' => 'required',
+            'jumlah' => 'required',
+            'keterangan' => 'required',
+        ]);
 
-        // dd($request->all());
         $input = $request->all();
-        $create_by = strtolower($input['created_by']);
-        $data = Uang_Masuk::where('created_by', $create_by)->first();
-        $res = 0;
-        if ($data != null) {
-            $jumlah = $data->jumlah + $input['jumlah'];
-            $res = Uang_Masuk::where('created_by', '=', $data->created_by)->update(['jumlah' => $jumlah]);
 
-            if ($res > 0) {
-                echo 'success';
-                return redirect('/uang_masuks');
-            } else {
-                echo 'failed';
-            }
-        } else {
-            Uang_Masuk::create([
-                'created_by' => $input['created_by'],
-                'id_lokasi_uang' => $input['lokasi_Uang'],
-                'jumlah' => $input['jumlah'],
-                'keterangan' => $input['keterangan'],
-            ]);
+        $profileImage = null;
+
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['file'] = $profileImage;
         }
-        return redirect('/uang_masuks');
+
+        $uangMasuk = new Uang_Masuk([
+            'created_by' => $input['created_by'],
+            'id_lokasi_uang' => $input['lokasi_Uang'],
+            'jumlah' => $input['jumlah'],
+            'keterangan' => $input['keterangan'],
+            'file' => $profileImage,
+        ]);
+        $uangMasuk->save();
+
+        return redirect('/uang_masuks')->with('success', 'Data created successfully');
     }
     public function edit($id)
     {
         $uang_Masuk = Uang_Masuk::find($id);
-        $lokasi_Uang = Lokasi_Uang::all(); // Assuming this retrieves all the Lokasi_Uang records
+        $lokasi_Uang = Lokasi_Uang::all();
         return view('keuangan.uang_masuks.edit', compact('uang_Masuk', 'lokasi_Uang'));
     }
     public function update(Request $request, $id)
     {
         $uang_Masuk = Uang_Masuk::find($id);
-        $uang_Masuk->created_by = $request->created_by;
-        $uang_Masuk->id_lokasi_uang = $request->lokasi_uang;
-        $uang_Masuk->jumlah = $request->jumlah;
-        $uang_Masuk->keterangan = $request->keterangan;
-        $uang_Masuk->save();
+
+        $profileImage = null;
+
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['file'] = $profileImage;
+        }
+
+        $input = $request->all();
+
+        $data = [
+            'created_by' => $input['created_by'],
+            'id_lokasi_uang' => $input['lokasi_uang'],
+            'jumlah' => $input['jumlah'],
+            'keterangan' => $input['keterangan'],
+            'file' => $profileImage,
+        ];
+
+        $uang_Masuk->update($data);
+
 
         return redirect('/uang_masuks');
     }
@@ -113,6 +129,4 @@ class UangMasukController extends Controller
 
         return redirect('/uang_masuks');
     }
-
-    // Metode lain tidak berubah
 }

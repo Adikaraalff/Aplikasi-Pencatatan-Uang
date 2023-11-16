@@ -27,11 +27,10 @@ class UangKeluarController extends Controller
                 ->addColumn('id_lokasi_uang', function (Uang_Keluar $uk) {
                     return $uk->Lokasi_Uang->nama;
                 })
-                // ->addColumn('jumlah', function (Uang_Keluar $uk) {
-                //     return 'Rp ' . number_format($uk->jumlah, 0, ',', '.');
-                // })
+                ->addColumn('jumlah', function (Uang_Keluar $uk) {
+                    return 'Rp' . number_format($uk->jumlah, 0, ',', '.');
+                })
                 ->addColumn('action', function ($row) {
-                    //$btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
                     $btn = '<form action="' . route('uang_keluars.destroy', $row->id) . '"method="POST">
                     <a class="btn btn-primary mr-2" href="' . route('uang_keluars.edit', $row->id) . '">Edit</a>' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger">Delete</button>
                     </form>';
@@ -51,51 +50,75 @@ class UangKeluarController extends Controller
 
     public function create()
     {
-        $lokasi_Uang = Lokasi_Uang::all(); // Mengambil data lokasi uang
+        $lokasi_Uang = Lokasi_Uang::all();
         return view('keuangan.uang_keluars.create', compact('lokasi_Uang'));
     }
 
     public function store(Request $request)
     {
-        $input = $request->all();
-        $create_by = strtolower($input['created_by']);
-        $data = Uang_Keluar::where('created_by', $create_by)->first();
-        $res = 0;
-        if ($data != null) {
-            $jumlah = $data->jumlah + $input['jumlah'];
-            $res = Uang_Keluar::where('created_by', '=', $data->created_by)->update(['jumlah' => $jumlah]);
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'created_by' => 'required',
+            'lokasi_Uang' => 'required',
+            'jumlah' => 'required',
+            'keterangan' => 'required',
+        ]);
 
-            if ($res > 0) {
-                echo 'success';
-                return redirect('/uang_keluars');
-            } else {
-                echo 'failed';
-            }
-        } else {
-            Uang_Keluar::create([
-                'created_by' => $input['created_by'],
-                'id_lokasi_uang' => $input['lokasi_Uang'],
-                'jumlah' => $input['jumlah'],
-                'keterangan' => $input['keterangan'],
-            ]);
+        $input = $request->all();
+        $profileImage = null;
+
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['file'] = $profileImage;
         }
-        return redirect('/uang_keluars');
+
+        $uangKeluar = new Uang_Keluar([
+            'created_by' => $input['created_by'],
+            'id_lokasi_uang' => $input['lokasi_Uang'],
+            'jumlah' => $input['jumlah'],
+            'keterangan' => $input['keterangan'],
+            'file' => $profileImage,
+        ]);
+        $uangKeluar->save();
+
+        return redirect('/uang_keluars')->with('success', 'Data created successfully');
     }
     public function edit($id)
     {
         $uang_Keluar = Uang_Keluar::find($id);
-        $lokasi_Uang = Lokasi_Uang::all(); // Assuming this retrieves all the Lokasi_Uang records
+        $lokasi_Uang = Lokasi_Uang::all();
         return view('keuangan.uang_keluars.edit', compact('uang_Keluar', 'lokasi_Uang'));
     }
 
     public function update(Request $request, $id)
     {
-        $uang_Keluar = uang_Keluar::find($id);
-        $uang_Keluar->created_by = $request->created_by;
-        $uang_Keluar->id_lokasi_uang = $request->lokasi_uang;
-        $uang_Keluar->jumlah = $request->jumlah;
-        $uang_Keluar->keterangan = $request->keterangan;
-        $uang_Keluar->save();
+        $uang_Keluar = Uang_Keluar::find($id);
+
+        $profileImage = null;
+
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $destinationPath = 'image/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['file'] = $profileImage;
+        }
+
+        $input = $request->all();
+
+        $data = [
+            'created_by' => $input['created_by'],
+            'id_lokasi_uang' => $input['lokasi_uang'],
+            'jumlah' => $input['jumlah'],
+            'keterangan' => $input['keterangan'],
+            'file' => $profileImage,
+        ];
+
+        $uang_Keluar->update($data);
+
 
         return redirect('/uang_keluars');
     }
@@ -106,6 +129,4 @@ class UangKeluarController extends Controller
 
         return redirect('/uang_keluars');
     }
-
-    // Metode lain tidak berubah
 }

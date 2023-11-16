@@ -14,7 +14,7 @@
                             </div>
                         </div>
                         <div class="container">
-                            <form method="POST" action="{{ route('uang_keluars.store') }}">
+                            <form method="POST" action="{{ route('uang_keluars.store') }}" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="form-group">
@@ -42,6 +42,11 @@
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan:</label>
                                     <textarea class="form-control" id="keterangan" name="keterangan" rows="4"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="file">Gambar:</label>
+                                    <input type="file" class="form-control" id="file" name="file">
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Simpan</button>

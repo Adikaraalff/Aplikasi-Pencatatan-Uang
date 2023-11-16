@@ -11,7 +11,8 @@
                                     <h4>Data Uang Keluar</h4>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-success" href="{{ route('uang_keluars.create') }}"> Tambah Uang Keluar</a>
+                                    <a class="btn btn-success" href="{{ route('uang_keluars.create') }}"> Tambah Uang
+                                        Keluar</a>
                                 </div>
                             </div>
                         </div>
@@ -27,15 +28,23 @@
                                         <tr>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 ID</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Created By</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Lokasi Uang</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Jumlah</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Keterangan</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Gambar</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Aksi</th>
                                             <th class="text-secondary opacity-7"></th>
                                         </tr>
@@ -63,18 +72,53 @@
 
     <!-- Custom Scripts -->
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('uang_keluars.index') }}",
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'created_by', name: 'created_by' },
-                    { data: 'id_lokasi_uang', name: 'id_lokasi_uang' },
-                    { data: 'jumlah', name: 'jumlah' },
-                    { data: 'keterangan', name: 'keterangan' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                columnDefs: [{
+                    "targets": 5,
+                    "data": 'file',
+                    "render": function(data, type, row, meta) {
+                        return '<img src="' + '{{ asset('image/') }}' + '/' + data +
+                            '" alt="Image" width="50">';
+                    }
+                }],
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'created_by',
+                        name: 'created_by'
+                    },
+                    {
+                        data: 'id_lokasi_uang',
+                        name: 'id_lokasi_uang'
+                    },
+                    {
+                        data: 'jumlah',
+                        name: 'jumlah'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
+                    },
+                    {
+                        data: 'file',
+                        name: 'file',
+                        render: function(data, type, row, meta) {
+                            return '<img src="' + '{{ asset('image/') }}' + '/' + data +
+                                '" alt="Image" width="50">';
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
                 ]
             });
         });

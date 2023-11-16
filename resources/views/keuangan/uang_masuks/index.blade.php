@@ -1,6 +1,5 @@
 @extends('layout')
 @section('content')
-
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -12,7 +11,8 @@
                                     <h4>Data Uang Masuk</h4>
                                 </div>
                                 <div class="">
-                                    <a class="btn btn-success" href="{{ route('uang_masuks.create') }}"> Tambah Uang Masuk</a>
+                                    <a class="btn btn-success" href="{{ route('uang_masuks.create') }}"> Tambah Uang
+                                        Masuk</a>
                                 </div>
                             </div>
                         </div>
@@ -26,21 +26,29 @@
                                 <table class="table align-items-center mb-0 data-table">
                                     <thead>
                                         <tr>
-                                            <tr>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    ID</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                    Created By</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Lokasi Uang</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Jumlah</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Keterangan</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Aksi</th>
-                                                <th class="text-secondary opacity-7"></th>
-                                            </tr>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                ID</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Created By</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Lokasi Uang</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Jumlah</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Keterangan</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Gambar</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Aksi</th>
+                                            <th class="text-secondary opacity-7"></th>
+                                        </tr>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -72,13 +80,48 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('uang_masuks.index') }}",
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'created_by', name: 'created_by' },
-                    { data: 'id_lokasi_uang', name: 'id_lokasi_uang' },
-                    { data: 'jumlah', name: 'jumlah' },
-                    { data: 'keterangan', name: 'keterangan' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                columnDefs: [{
+                    "targets": 5,
+                    "data": 'file',
+                    "render": function(data, type, row, meta) {
+                        return '<img src="' + '{{ asset('image/') }}' + '/' + data +
+                            '" alt="Image" width="50">';
+                    }
+                }],
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'created_by',
+                        name: 'created_by'
+                    },
+                    {
+                        data: 'id_lokasi_uang',
+                        name: 'id_lokasi_uang'
+                    },
+                    {
+                        data: 'jumlah',
+                        name: 'jumlah'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
+                    },
+                    {
+                        data: 'file',
+                        name: 'file',
+                        render: function(data, type, row, meta) {
+                            return '<img src="' + '{{ asset('image/') }}' + '/' + data +
+                                '" alt="Image" width="50">';
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
                 ]
             });
         });
