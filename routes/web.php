@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LokasiUangController;
 use App\Http\Controllers\UangKeluarController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UangMasukController;
+use App\Http\Controllers\UserController;
 
 Route::resource('lokasi_uangs', LokasiUangController::class);
 Route::resource('uang_keluars', UangKeluarController::class);
@@ -15,6 +17,8 @@ Route::get('registration', [AuthController::class,'registration'])->name('regist
 Route::post('post-registration',[AuthController::class, 'postRegistration'])->name('register.post');
 Route::get('dashboard', [AuthController::class,'dashboard']);
 Route::get('logout', [AuthController::class,'logout'])->name('logout');
+Route::resource('users', UserController::class);
+Route::resource('roles', RoleController::class);
 // Route::get('/lokasi_uang/{lokasi_uang}/edit', LokasiUangController::class,'edit')->name('lokasi_uangs.edit');
 // Route::put('/lokasi_uang/{lokasi_uang}/update', LokasiUangController::class,'update')->name('lokasi_uangs.update');
 

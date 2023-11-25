@@ -38,21 +38,29 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link me-2" href="{{ route('lokasi_uangs.index') }}">
-                                <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
-                                Lokasi Uang
+                                <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
+                                Keuangan
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link me-2" href="{{ route('uang_masuks.index') }}">
-                                <i class="fas fa-key opacity-6 text-dark me-1"></i>
-                                Uang Masuk
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Manage
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link me-2" href="{{ route('uang_keluars.index') }}">
-                                <i class="fas fa-key opacity-6 text-dark me-1"></i>
-                                Uang Keluar
-                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="nav-link" href="{{ route('users.index') }}">
+                                        <i class="fa fa-user-circle opacity-6 text-dark me-1"></i>
+                                        Manage Users
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="{{ route('roles.index') }}">
+                                        <i class="fa fa-user-circle opacity-6 text-dark me-1"></i>
+                                        Manage Roles
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link me-2" href="{{ route('logout') }}">
@@ -60,8 +68,8 @@
                                 Log Out
                             </a>
                         </li>
-                    </ul>
-                @endguest
+                    @endguest
+                </ul>
             </div>
         </div>
     </nav>
