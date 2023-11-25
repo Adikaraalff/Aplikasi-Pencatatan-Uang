@@ -5,24 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Uang_Masuk;
 use App\Models\Lokasi_Uang;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class UangMasukController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(
+            'permission:uang_Masuk-list|uang_Masuk-create|uang_Masuk-edit|uang_Masuk-delete',
+            ['only' => ['index', 'show']]
+        );
+        $this->middleware('permission:uang_Masuk-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:uang_Masuk-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:uang_Masuk-delete', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            $query_data = new Uang_Masuk();
+            $query_data = Uang_Masuk::query();
 
-            if ($request->sSearch) {
-                $search_value = '%' . $request->sSearch . '%';
-                $query_data = $query_data->where(function ($query) use ($search_value) {
-                    $query->where('created_by', 'like', '%' . $search_value . '%')
-                        ->orWhere('keterangan', 'like', '%' . $search_value . '%');
+            if ($request->has('sSearch') && $request->input('sSearch')) {
+                $search_value = '%' . $request->input('sSearch') . '%';
+                $query_data->where(function ($query) use ($search_value) {
+                    $query->where('created_by', 'like', $search_value)
+                        ->orWhere('keterangan', 'like', $search_value);
                 });
             }
-            $data = $query_data->orderBy('created_by', 'asc')->get();
-            return Datatables::of($data)
+
+            return DataTables::of($query_data)
                 ->addIndexColumn()
                 ->addColumn('id_lokasi_uang', function (Uang_Masuk $um) {
                     return $um->Lokasi_Uang->nama;
@@ -31,14 +43,20 @@ class UangMasukController extends Controller
                     return 'Rp' . number_format($um->jumlah, 0, ',', '.');
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<form action="' . route('uang_masuks.destroy', $row->id) . '"method="POST">
-                    <a class="btn btn-primary mr-2" href="' . route('uang_masuks.edit', $row->id) . '">Edit</a>' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger">Delete</button>
-                    </form>';
+                    $btn = '<form action="' . route('uang_masuks.destroy', $row->id) . '" method="POST">';
+                    if (Auth::user()->can('uang_Masuk-edit')) {
+                        $btn .= '<a class="btn btn-primary" href="' . route('uang_masuks.edit', $row->id) . '"><i class="bi bi-pencil"></i>Edit</a>';
+                    }
+                    if (Auth::user()->can('uang_Masuk-delete')) {
+                        $btn .= "<a href=\"#\" onclick=\"deleteConfirm('" . route('uang_masuks.destroy', $row->id) . "')\" class=\"btn btn-danger\"><i class=\"fa fa-trash\"></i>Delete</a>";
+                    }
+                    $btn .= '</form>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
         return view('keuangan.uang_masuks.index');
     }
     public function index_old()
