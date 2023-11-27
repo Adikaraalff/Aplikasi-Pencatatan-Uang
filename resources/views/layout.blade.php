@@ -98,14 +98,14 @@
                             bis_skin_checked="1">
                             <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1">Roles</span>
+                        <span class="nav-link-text ms-1">Role</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('users.index') }}">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
                             bis_skin_checked="1">
-                            <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+                            <i class="ni ni-user-run text-dark text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">User</span>
                     </a>

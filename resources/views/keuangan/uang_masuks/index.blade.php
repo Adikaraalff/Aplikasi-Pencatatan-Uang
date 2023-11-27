@@ -13,6 +13,7 @@
                                 <div class="">
                                     <a class="btn btn-success" href="{{ route('uang_masuks.create') }}"> Tambah Uang
                                         Masuk</a>
+                                    <a class="btn btn-danger" href="{{ route('uang_masuks-pdf') }}"> Export PDF</a>
                                 </div>
                             </div>
                         </div>

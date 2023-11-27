@@ -19,6 +19,9 @@ Route::get('dashboard', [AuthController::class,'dashboard']);
 Route::get('logout', [AuthController::class,'logout'])->name('logout');
 Route::resource('users', UserController::class);
 Route::resource('roles', RoleController::class);
+Route::get('lokasi_uangs.pdf', [LokasiUangController::class,'exportPdf'])->name('lokasi_uangs-pdf');
+Route::get('uang_keluars.pdf', [UangKeluarController::class,'exportPdf'])->name('uang_keluars-pdf');
+Route::get('uang_masuks.pdf', [UangMasukController::class,'exportPdf'])->name('uang_masuks-pdf');
 // Route::get('/lokasi_uang/{lokasi_uang}/edit', LokasiUangController::class,'edit')->name('lokasi_uangs.edit');
 // Route::put('/lokasi_uang/{lokasi_uang}/update', LokasiUangController::class,'update')->name('lokasi_uangs.update');
 

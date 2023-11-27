@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Lokasi_Uang;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
+use PDF;
 
 class LokasiUangController extends Controller
 {
@@ -96,5 +97,12 @@ class LokasiUangController extends Controller
         $lokasi_Uang->delete();
 
         return redirect('/lokasi_uangs');
+    }
+    public function exportPdf()
+    {
+        $lokasi_Uang = Lokasi_Uang::all();
+        $pdf = PDF::loadView('keuangan.lokasi_uangs.exportpdf', ['lokasi_Uang' => $lokasi_Uang]);
+        $pdf->setPaper('legal', 'landscape');
+        return $pdf->stream('LaporanDataKeuangan.pdf');
     }
 }

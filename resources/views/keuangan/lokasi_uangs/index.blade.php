@@ -10,9 +10,10 @@
                                 <div class="card-header pb-0">
                                     <h4>Lokasi Uang</h4>
                                 </div>
-                                <div class="pull-right">
+                                <div class="pull-right mr-2">
                                     <a class="btn btn-success" href="{{ route('lokasi_uangs.create') }}"> Tambah Lokasi
                                         Uang</a>
+                                    <a class="btn btn-danger" href="{{ route('lokasi_uangs-pdf') }}"> Export PDF</a>
                                 </div>
                             </div>
                         </div>

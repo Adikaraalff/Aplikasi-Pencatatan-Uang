@@ -7,6 +7,7 @@ use App\Models\Uang_Masuk;
 use App\Models\Lokasi_Uang;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
+use PDF;
 
 class UangMasukController extends Controller
 {
@@ -146,5 +147,12 @@ class UangMasukController extends Controller
         $uang_Masuk->delete();
 
         return redirect('/uang_masuks');
+    }
+    public function exportPdf()
+    {
+        $uang_Masuk = Uang_Masuk::all();
+        $pdf = PDF::loadView('keuangan.uang_masuks.exportpdf', ['uang_Masuk' => $uang_Masuk]);
+        $pdf->setPaper('legal', 'landscape');
+        return $pdf->stream('LaporanDataKeuangan.pdf');
     }
 }
