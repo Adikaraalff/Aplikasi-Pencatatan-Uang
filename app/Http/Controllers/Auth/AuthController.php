@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lokasi_Uang;
 use App\Models\Uang_Keluar;
 use App\Models\Uang_Masuk;
 use Illuminate\Http\Request;
@@ -56,16 +57,40 @@ class AuthController extends Controller
 
     public function dashboard()
     {
+
         $uangMasuks = $this->formatuang(Uang_Masuk::sum("jumlah"));
         $uangKeluars = $this->formatuang(Uang_Keluar::sum("jumlah"));
         $users = User::count();
+
+        $dataUangMasuk = Uang_Masuk::all();
+        $dataUangKeluar = Uang_Keluar::all();
+
+        $lokasiUangs = Lokasi_Uang::all();
+
+
+        // $dompet = $this->formatuang(Uang_Masuk::sum());
+        // $dompet = Uang_Masuk::where('id_lokasi_uang','=','1')->get();
+        // $uangDompet = [];
+        // foreach ($dompet as $d) {
+        //     $uangDompet[] = [
+        //         'jumlah' => $d->jumlah
+        //     ];
+        // }
+        // $jumlah = 0;
+        // foreach ($uangDompet as $ud) {
+        //     $jumlah += $ud['jumlah'];
+        // }
+        // dd($jumlah);
+
+        // $keteranganJumlah = array_sum($uangDompet);
 
         $total = floatval($uangMasuks) + floatval($uangKeluars);
         $total = number_format($total, 3, '.', '');
 
 
+
         if (Auth::check()) {
-            return view('auth.dashboard', compact('uangMasuks', 'uangKeluars', 'users','total'));
+            return view('auth.dashboard', compact('uangMasuks', 'uangKeluars', 'users', 'total','lokasiUangs','dataUangMasuk','dataUangKeluar'));
         }
 
         return redirect("login")->with('error', 'Oops! You do not have access');

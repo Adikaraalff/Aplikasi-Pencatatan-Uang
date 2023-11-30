@@ -4,6 +4,7 @@
 <head>
     <title></title>
     <style type="text/css"></style>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
 
 <body>
